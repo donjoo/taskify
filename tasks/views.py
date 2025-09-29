@@ -6,6 +6,15 @@ from django.shortcuts import get_object_or_404
 
 
 
+def _user_role(user):
+    return getattr(user, 'role', None)
+
+
+class IsAdminOrSuperAdmin(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return _user_role(request.user) in ('admin', 'superadmin') 
+
+
 
 class TaskListView(generics.ListAPIView):
     serializer_class = TaskSerializer
