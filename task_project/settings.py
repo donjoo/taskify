@@ -138,3 +138,9 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
 }
+
+
+
+LOGIN_URL = '/panel/login/'
+LOGIN_REDIRECT_URL = '/panel/superadmin/dashboard/'
+LOGOUT_REDIRECT_URL = '/panel/login/'
