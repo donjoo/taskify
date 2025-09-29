@@ -3,8 +3,8 @@ from .serializers import TaskSerializer, TaskStatusUpdateSerializer
 from rest_framework import generics, permissions
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
-
-
+from rest_framework.response import Response
+from rest_framework import status
 
 def _user_role(user):
     return getattr(user, 'role', None)
@@ -37,3 +37,32 @@ class TaskUpdateView(generics.UpdateAPIView):
            self.permission_denied(self.request, message="You do not have persmission to edit this task.")
         return obj
     
+
+
+class TaskReportView(generics.RetrieveAPIView):
+    serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated, IsAdminOrSuperAdmin]
+    lookup_url_kwarg = 'id'
+
+
+    def get_object(self):
+        obj = get_object_or_404(Task, id=self.kwargs.get('id'))
+        if obj.status != 'completed':
+            self.permission_denied(self.request, message="Report only savailable for completed tasks.")
+        return obj
+    
+
+    def get(self, request, *args, **kwargs):
+        task = self.get_object()
+        data = {
+            'id': task.id,
+            'title': task.title,
+            'description': task.description,    
+            'completion_report': task.completion_report,
+            'worked_hours': task.worked_hours,  
+            'completed_at': task.updated_at,    
+        }
+        return Response(data, status=status.HTTP_200_OK)   
+    
+
+
