@@ -7,6 +7,8 @@ from tasks.models import Task
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib import messages
 from accounts.forms import UserForm
+from tasks.forms import TaskForm
+
 
 # admin authenticate
 def login_view(request):
@@ -103,3 +105,47 @@ def admin_dashboard(request):
 
 
 
+# <<<<<<<<<<<<<<<<<<---------------------- TASK VIEWS ---------------------------------->>>>>>>>>>>>>>>>>>>
+
+
+
+
+@login_required
+def task_create(request):
+    if not role_check(request.user, ['admin','superadmin']):
+        return redirect('login')
+    if request.method == 'POST':
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("admin_dashboard" if request.user.role == "admin" else "superadmin_dashboard") 
+        else:
+            form = TaskForm()
+    return render(request, 'admin_panel/task_form.html', {'form': form})
+
+
+
+
+@login_required
+def task_update(request,pk):
+    if not role_check(request.user, ['admin','superadmin']):
+        return redirect('login')
+    task = get_object_or_404(Task, pk=pk)
+    form = TaskForm(request.POST or None, instance=task)
+    if form.is_valid():
+        form.save()
+        return redirect("admin_dashboard" if request.user.role == "admin" else "superadmin_dashboard")
+    return render(request, 'admin_panel/task_form.html', {'form': form})
+
+
+
+
+@login_required
+def task_delete(request, pk):
+    if not role_check(request.user, ['admin','superadmin']):
+        return redirect('login')
+    task = get_object_or_404(Task, pk=pk)
+    if request.method == 'POST':
+        task.delete()
+        return redirect("admin_dashboard" if request.user.role == "admin" else "superadmin_dashboard")
+    return render(request, 'admin_panel/task_confirm_delete.html', {'task': task})
