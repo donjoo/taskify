@@ -18,7 +18,13 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('superadmin_dashboard')
+            if user.role == "superadmin":
+                return redirect("superadmin_dashboard")
+            elif user.role == "admin":
+                return redirect("admin_dashboard")
+            else:
+                # if normal user logs in
+                return redirect("user_home")
         else:
             messages.error(request, 'Invalid username or password.')
             return render(request, 'admin_panel/login.html', {'error': 'Invalid credentials'})
