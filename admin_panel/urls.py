@@ -17,4 +17,10 @@ urlpatterns = [
     path("users/<int:pk>/delete/", views.user_delete, name="user_delete"),
 
 
+    # Task CRUD (Admin + SuperAdmin)
+    path("tasks/create/", views.task_create, name="task_create"),
+    path("tasks/<int:pk>/update/", views.task_update, name="task_update"),
+    path("tasks/<int:pk>/delete/", views.task_delete, name="task_delete"),
+
+
 ]

@@ -4,7 +4,7 @@
 <h1>SuperAdmin Dashboard</h1>
 
 <h2>All Users</h2>
-<a href="{% url 'user_create' %}" class="btn btn-primary">+ Create User</a>
+<a href="{% url 'user_create' %}" class="btn btn-primary">➕ Create User</a>
 <table>
   <tr>
     <th>Username</th>
@@ -16,13 +16,18 @@
     <td>{{ user.username }}</td>
     <td>{{ user.role }}</td>
     <td>
-      <!-- Add buttons to edit/delete user -->
+      <a href="{% url 'user_update' user.id %}" class="btn btn-sm btn-warning">✏️ Edit</a>
+      <a href="{% url 'user_delete' user.id %}" class="btn btn-sm btn-danger">🗑️ Delete</a>
+   
     </td>
   </tr>
   {% endfor %}
 </table>
 
 <h2>All Tasks</h2>
+
+<a href="{% url 'task_create' %}" class="btn btn-primary">➕ Add Task</a>
+
 <table>
   <tr>
     <th>Title</th>
@@ -34,6 +39,11 @@
     <td>{{ task.title }}</td>
     <td>{{ task.assigned_to.username }}</td>
     <td>{{ task.status }}</td>
+    <td>
+
+         <a href="{% url 'task_update' task.id %}">✏️ Edit</a>
+    <a href="{% url 'task_delete' task.id %}">🗑️ Delete</a>
+    </td>
   </tr>
   {% endfor %}
 </table>

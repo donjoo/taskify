@@ -119,8 +119,8 @@ def task_create(request):
         if form.is_valid():
             form.save()
             return redirect("admin_dashboard" if request.user.role == "admin" else "superadmin_dashboard") 
-        else:
-            form = TaskForm()
+    else:
+        form = TaskForm()
     return render(request, 'admin_panel/task_form.html', {'form': form})
 
 
