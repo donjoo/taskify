@@ -1,4 +1,4 @@
-from django.shortcuts import render , redirect
+from django.shortcuts import render , redirect ,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from accounts.utils import role_check
 from django.http import HttpResponseForbidden
@@ -6,7 +6,7 @@ from accounts.models import CustomUser
 from tasks.models import Task   
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib import messages
-
+from accounts.forms import UserForm
 
 # admin authenticate
 def login_view(request):
@@ -46,6 +46,45 @@ def superadmin_dashboard(request):
     })
 
 
+
+
+@login_required
+def user_create(request):
+    if request.user.role != "superadmin":
+        return redirect('login')
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('superadmin_dashboard')
+    else:
+        form = UserForm()
+    return render(request, 'admin_panel/user_form.html', {'form': form})   
+
+@login_required
+def user_update(request,pk):
+    if request.user.role != "superadmin":
+        return redirect('login')
+    user = get_object_or_404(CustomUser, pk=pk)
+    form = UserForm(request.POST or None, instance=user)
+    if form.is_valid():
+        form.save()
+        return redirect('superadmin_dashboard')
+    return render(request, 'admin_panel/user_form.html', {'form': form})
+
+
+@login_required
+def user_delete(request, pk):
+    if request.user.role != "superadmin":
+        return redirect('login')
+    user = get_object_or_404(CustomUser, pk=pk)
+    if request.method == 'POST':
+        user.delete()
+        return redirect('superadmin_dashboard')
+    return render(request, 'admin_panel/user_confirm_delete.html', {'user': user})
+
+
+
 @login_required
 def admin_dashboard(request):
     if not role_check(request.user, ['admin','superadmin']):
@@ -58,6 +97,9 @@ def admin_dashboard(request):
         'users': managed_users,
         'tasks': tasks
     })
+
+
+
 
 
 
