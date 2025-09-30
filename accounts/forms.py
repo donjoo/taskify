@@ -9,10 +9,10 @@ class UserForm(forms.ModelForm):
         model = CustomUser
         fields = ['username', 'email', 'password', 'role']
 
-        def save(self,commit=True):
-            user = super().save(commit=False)
-            if self.cleaned_data['password']:
-                user.set_password(self.cleaned_data['password'])
-            if commit:
-                user.save()
-            return user
+    def save(self,commit=True):
+        user = super().save(commit=False)
+        if self.cleaned_data.get('password'):
+            user.set_password(self.cleaned_data['password'])
+        if commit:
+            user.save()
+        return user
