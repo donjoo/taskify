@@ -1,0 +1,26 @@
+<!-- panel/templates/panel/task_form.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% if form.instance.pk %}Edit{% else %}Create{% endif %} Task</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        form { max-width: 500px; margin: auto; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; }
+        button { margin-top: 15px; padding: 10px 15px; }
+    </style>
+</head>
+<body>
+    <h2>{% if form.instance.pk %}Edit{% else %}Create{% endif %} Task</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+
+    <p><a href="{% if request.user.role == 'admin' %}{% url 'admin_dashboard' %}{% else %}{% url 'superadmin_dashboard' %}{% endif %}">⬅ Back to Dashboard</a></p>
+</body>
+</html>

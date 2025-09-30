@@ -16,8 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
+from admin_panel import views as admin_views
 urlpatterns = [
+        path('', admin_views.login_view, name='login'),  # home page points to login
         path('api/accounts/', include('accounts.urls')),
         path('api/', include('tasks.urls')),    
         path('panel/', include('admin_panel.urls')),

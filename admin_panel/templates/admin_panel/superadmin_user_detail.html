@@ -22,6 +22,7 @@
                 <td>{{ task.due_date|date:"d M Y" }}</td>
                 <td>{{ task.completion_report|default:"--" }}</td>
                 <td>{{ task.worked_hours|default:"--" }}</td>
+                <td>      <a href="{% url 'superadmin_task_detail' task.id %}">View Task</a></td>
             </tr>
             {% empty %}
             <tr>

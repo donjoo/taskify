@@ -1,0 +1,35 @@
+{% extends "admin_panel/base.html" %}
+
+{% block content %}
+<div class="container" style="max-width: 700px; margin-top: 50px;">
+    <div class="card shadow-sm p-4">
+        <h2 class="mb-4 text-center">Task Details</h2>
+
+        <p><strong>Title:</strong> {{ task.title }}</p>
+        <p><strong>Description:</strong> {{ task.description }}</p>
+<p>
+  <strong>Assigned To:</strong> 
+  <a href="{% url 'superadmin_user_detail' task.assigned_to.id %}">
+    {{ task.assigned_to.username }}
+  </a>
+</p>        <p><strong>Status:</strong> {{ task.get_status_display }}</p>
+        <p><strong>Due Date:</strong> {{ task.due_date|date:"d M Y" }}</p>
+
+        {% if task.status == "completed" %}
+            <div class="mt-4">
+                <h4>Completion Report</h4>
+                <p>{{ task.completion_report }}</p>
+                <p><strong>Worked Hours:</strong> {{ task.worked_hours }}</p>
+            </div>
+        {% else %}
+            <p class="text-muted mt-4">No report submitted yet.</p>
+        {% endif %}
+
+        <div class="mt-4 d-flex justify-content-between">
+            <a href="{% url 'task_update' task.id %}" class="btn btn-warning btn-sm">✏️ Edit Task</a>
+            <a href="{% url 'task_delete' task.id %}" class="btn btn-danger btn-sm">🗑️ Delete Task</a>
+            <a href="{% url 'superadmin_user_detail' task.assigned_to.id %}" class="btn btn-secondary btn-sm">⬅ Back to User Tasks</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -7,7 +7,7 @@ from tasks.models import Task
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib import messages
 from accounts.forms import UserForm
-from tasks.forms import TaskForm
+from tasks.forms import TaskForm , TaskFormForAdmin
 from django.core.paginator import Paginator
 
 # admin authenticate
@@ -136,6 +136,24 @@ def task_create(request):
     return render(request, 'admin_panel/task_form.html', {'form': form})
 
 
+@login_required
+def admin_task_create(request):
+    if request.user.role != "admin":
+        return HttpResponseForbidden("Forbidden")
+
+    if request.method == "POST":
+        form = TaskFormForAdmin(request.POST, admin_user=request.user)
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.assigned_admin = request.user
+            task.save()
+            return redirect('admin_dashboard')
+    else:
+        form = TaskFormForAdmin(admin_user=request.user)
+
+    return render(request, 'admin_panel/admin_task_form.html', {'form': form})
+
+
 
 
 @login_required
@@ -183,3 +201,34 @@ def superadmin_user_detail(request, user_id):
         "user_obj": user,
         "tasks": tasks
     })
+
+
+@login_required
+def superadmin_task_detail(request, task_id):
+    if request.user.role != "superadmin":
+        return HttpResponseForbidden("Forbidden")
+
+    task = get_object_or_404(Task, id=task_id)
+    return render(request, "admin_panel/superadmin_task_detail.html", {
+        "task": task
+    })
+
+
+
+
+# @login_required
+# def admin_task_create(request):
+#     if request.user.role != "admin":
+#         return HttpResponseForbidden("Forbidden")
+
+#     if request.method == "POST":
+#         form = TaskFormForAdmin(request.POST, admin_user=request.user)
+#         if form.is_valid():
+#             task = form.save(commit=False)
+#             task.assigned_admin = request.user
+#             task.save()
+#             return redirect('admin_dashboard')
+#     else:
+#         form = TaskFormForAdmin(admin_user=request.user)
+
+#     return render(request, 'panel/task_form.html', {'form': form})

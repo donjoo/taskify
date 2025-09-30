@@ -10,7 +10,22 @@ class Task(models.Model):
 
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
-    assigned_to = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='tasks')
+    assigned_admin = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        limit_choices_to={'role': 'admin'},
+        related_name='admin_tasks'
+    )
+
+    # The user who will complete the task
+    assigned_to = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='tasks',
+        limit_choices_to={'role': 'user'})
+    
     due_date = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
 
