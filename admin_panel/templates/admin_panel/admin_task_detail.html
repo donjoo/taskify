@@ -9,7 +9,7 @@
         <p>
             <strong>Assigned User:</strong> 
             <a href="{% url 'admin_user_detail' task.assigned_to.id %}" class="text-decoration-none">
-                {{ task.assigned_to.email }}
+                {{ task.assigned_to.username }}
             </a>
         </p>
         <p><strong>Status:</strong> {{ task.get_status_display }}</p>

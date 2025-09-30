@@ -47,6 +47,10 @@
          <a href="{% url 'task_update' task.id %}">✏️ Edit</a>
     <a href="{% url 'task_delete' task.id %}">🗑️ Delete</a>
     </td>
+
+        <td>
+      <a href="{% url 'superadmin_task_detail' task.id %}">View Tasks</a>
+    </td>
      
   </tr>
   {% endfor %}
