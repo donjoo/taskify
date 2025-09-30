@@ -35,12 +35,14 @@
   <tr>
     <th>Title</th>
     <th>Assigned To</th>
+    <th>Assigned Admin</th>
     <th>Status</th>
   </tr>
   {% for task in tasks %}
   <tr>
     <td>{{ task.title }}</td>
     <td>{{ task.assigned_to.username }}</td>
+    <td>{{ task.assigned_admin.username }}</td>
     <td>{{ task.status }}</td>
     <td>
 
