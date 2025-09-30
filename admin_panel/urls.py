@@ -9,4 +9,6 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
 
     path('superadmin/dashboard/', views.superadmin_dashboard, name='superadmin_dashboard'),
+    path('admin/dashboard/', views.admin_dashboard, name='admin_dashboard'),
+
 ]

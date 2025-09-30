@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
 
-
+# admin authenticate
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -29,20 +29,10 @@ def logout_view(request):
     return redirect('login')
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 @login_required
 def superadmin_dashboard(request):
+    """# Superadmin dashboard view
+    """
     if not role_check(request.user, ['superadmin']):
         return HttpResponseForbidden("Forbidden")
     
@@ -52,6 +42,20 @@ def superadmin_dashboard(request):
     tasks = Task.objects.all()
     return render(request, 'admin_panel/superadmin_dashboard.html',{
         'users': users,
+        'tasks': tasks
+    })
+
+
+@login_required
+def admin_dashboard(request):
+    if not role_check(request.user, ['admin','superadmin']):
+        return HttpResponseForbidden("Forbidden")
+    
+    managed_users = CustomUser.objects.filter(role = 'user', )
+    tasks = Task.objects.filter(assigned_to__in=managed_users)
+    
+    return render(request, 'admin_panel/admin_dashboard.html',{
+        'users': managed_users,
         'tasks': tasks
     })
 
