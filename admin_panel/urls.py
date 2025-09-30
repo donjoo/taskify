@@ -23,4 +23,5 @@ urlpatterns = [
     path("tasks/<int:pk>/delete/", views.task_delete, name="task_delete"),
 
 
+    path("superadmin/user/<int:user_id>/", views.superadmin_user_detail, name="superadmin_user_detail"),
 ]

@@ -161,3 +161,25 @@ def task_delete(request, pk):
         task.delete()
         return redirect("admin_dashboard" if request.user.role == "admin" else "superadmin_dashboard")
     return render(request, 'admin_panel/task_confirm_delete.html', {'task': task})
+
+
+
+
+
+
+
+
+
+
+@login_required
+def superadmin_user_detail(request, user_id):
+    if request.user.role != "superadmin":
+        return HttpResponseForbidden("Forbidden")
+
+    user = get_object_or_404(CustomUser, id=user_id)
+    tasks = Task.objects.filter(assigned_to=user)
+
+    return render(request, "admin_panel/superadmin_user_detail.html", {
+        "user_obj": user,
+        "tasks": tasks
+    })
