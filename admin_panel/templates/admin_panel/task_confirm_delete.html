@@ -1,0 +1,30 @@
+{% extends "admin_panel/base.html" %}
+
+{% block content %}
+<div class="container" style="max-width: 600px; margin-top: 50px;">
+    <div class="card shadow-sm p-4 text-center">
+        <h2 class="mb-4">Confirm Delete Task</h2>
+        <p>Are you sure you want to delete the task:</p>
+        <h4 class="text-danger">{{ task.title }}</h4>
+
+        <form method="post" style="margin-top: 20px;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">🗑️ Yes, Delete</button>
+            <a href="{% if request.user.role == 'admin' %}{% url 'admin_dashboard' %}{% else %}{% url 'superadmin_dashboard' %}{% endif %}" class="btn btn-secondary">⬅ Cancel</a>
+        </form>
+    </div>
+</div>
+
+<style>
+    .card h2 {
+        font-size: 24px;
+    }
+    .card h4 {
+        margin-top: 10px;
+    }
+    button, a.btn {
+        min-width: 120px;
+        margin: 5px;
+    }
+</style>
+{% endblock %}

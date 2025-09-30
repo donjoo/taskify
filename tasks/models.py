@@ -24,7 +24,7 @@ class Task(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='tasks',
-        limit_choices_to={'role': 'user'})
+        limit_choices_to={'role': 'user'},null=True, blank=True)
     
     due_date = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
