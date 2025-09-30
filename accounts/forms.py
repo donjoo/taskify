@@ -7,7 +7,7 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = CustomUser
-        fields = ['username', 'email', 'password', 'role']
+        fields = ['username', 'email', 'password', 'role','admin']
 
     def save(self,commit=True):
         user = super().save(commit=False)
