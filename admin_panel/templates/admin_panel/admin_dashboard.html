@@ -1,36 +1,30 @@
 {% extends "admin_panel/base.html" %}
 {% block content %}
-<style>
-  .pagination {
-    display: flex;
-    justify-content: center; /* centers it */
-    list-style: none;
-    padding: 0;
-    margin: 10px 0;
-    gap: 5px; /* space between buttons */
-  }
-  .pagination li {
-    display: inline-block;
-  }
-  .pagination a, .pagination span {
-    display: block;
-    padding: 6px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    text-decoration: none;
-    color: #007bff;
-  }
-  .pagination .active span {
-    background: #007bff;
-    color: white;
-    border-color: #007bff;
-  }
-  .pagination .disabled span {
-    color: #aaa;
-    cursor: not-allowed;
-  }
-</style>
 <h2>Admin Dashboard</h2>
+
+<h3>Assigned Users</h3>
+<table class="table table-bordered mb-4">
+    <thead>
+        <tr>
+            <th>Name/Email</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in assigned_users %}
+        <tr>
+            <td>{{ user.email }}</td>
+            <td>
+                <a href="{% url 'admin_user_detail' user.id %}" class="btn btn-sm btn-info">View Tasks</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2">No users assigned.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 <h3>Tasks</h3>
 <a href="{% url 'admin_task_create' %}" class="btn btn-primary mb-3">➕ Add Task</a>
@@ -47,8 +41,9 @@
         {% for task in page_obj %}
         <tr>
             <td>{{ task.title }}</td>
-            <td>{{ task.status }}</td>
+            <td>{{ task.get_status_display }}</td>
             <td>
+                <a href="{% url 'admin_task_detail' task.id %}" class="btn btn-sm btn-info">View</a>
                 <a href="{% url 'task_update' task.id %}" class="btn btn-sm btn-warning">✏️ Edit</a>
                 <a href="{% url 'task_delete' task.id %}" class="btn btn-sm btn-danger">🗑️ Delete</a>
             </td>
@@ -89,5 +84,4 @@
     {% endif %}
   </ul>
 </nav>
-
 {% endblock %}

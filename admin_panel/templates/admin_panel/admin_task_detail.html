@@ -1,0 +1,49 @@
+{% extends "admin_panel/base.html" %}
+
+{% block content %}
+<div class="container" style="max-width: 700px; margin-top: 50px;">
+    <div class="card shadow-sm p-4">
+        <h2 class="mb-4 text-center">Task Details: {{ task.title }}</h2>
+
+        <p><strong>Description:</strong> {{ task.description }}</p>
+        <p>
+            <strong>Assigned User:</strong> 
+            <a href="{% url 'admin_user_detail' task.assigned_to.id %}" class="text-decoration-none">
+                {{ task.assigned_to.email }}
+            </a>
+        </p>
+        <p><strong>Status:</strong> {{ task.get_status_display }}</p>
+        <p><strong>Due Date:</strong> {{ task.due_date|date:"d M Y" }}</p>
+
+        {% if task.status == 'completed' %}
+            <div class="mt-4">
+                <h4>Completion Report</h4>
+                <p>{{ task.completion_report }}</p>
+                <p><strong>Worked Hours:</strong> {{ task.worked_hours }}</p>
+            </div>
+        {% else %}
+            <p class="text-muted mt-4">No report submitted yet.</p>
+        {% endif %}
+
+        <div class="mt-4 d-flex justify-content-between flex-wrap">
+            <a href="{% url 'task_update' task.id %}" class="btn btn-warning btn-sm mb-2">✏️ Edit</a>
+            <a href="{% url 'task_delete' task.id %}" class="btn btn-danger btn-sm mb-2">🗑️ Delete</a>
+            <a href="{% url 'admin_user_detail' task.assigned_to.id %}" class="btn btn-secondary btn-sm mb-2">⬅ Back to User Tasks</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card p {
+        margin-bottom: 10px;
+    }
+
+    .card h4 {
+        margin-top: 15px;
+    }
+
+    a.text-decoration-none:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}

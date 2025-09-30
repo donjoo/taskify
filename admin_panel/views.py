@@ -100,21 +100,39 @@ def admin_dashboard(request):
         return HttpResponseForbidden("Forbidden")
 
     # Get managed users and their tasks
-    managed_users = CustomUser.objects.filter(role='user')
-    tasks_list = Task.objects.filter(assigned_to__in=managed_users).order_by('-id')
+    assigned_users = CustomUser.objects.filter(admin=request.user, role="user")
+    tasks = Task.objects.filter(assigned_admin=request.user).order_by('-created_at')
 
-    # Pagination: 5 tasks per page
-    paginator = Paginator(tasks_list, 5)
+    paginator = Paginator(tasks, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'admin_panel/admin_dashboard.html', {
-        'users': managed_users,
-        'page_obj': page_obj,  # pass page_obj to template
+    return render(request, "admin_panel/admin_dashboard.html", {
+        "assigned_users": assigned_users,
+        "page_obj": page_obj
     })
 
 
 
+
+@login_required
+def admin_user_detail(request, user_id):
+    if request.user.role != "admin":
+        return HttpResponseForbidden("Forbidden")
+
+    user_obj = get_object_or_404(CustomUser, id=user_id, admin=request.user)
+    tasks = Task.objects.filter(assigned_to=user_obj)
+
+    return render(request, "admin_panel/admin_user_detail.html", {"user_obj": user_obj, "tasks": tasks})
+
+
+@login_required
+def admin_task_detail(request, task_id):
+    if request.user.role != "admin":
+        return HttpResponseForbidden("Forbidden")
+
+    task = get_object_or_404(Task, id=task_id, assigned_admin=request.user)
+    return render(request, "admin_panel/admin_task_detail.html", {"task": task})
 
 
 # <<<<<<<<<<<<<<<<<<---------------------- TASK VIEWS ---------------------------------->>>>>>>>>>>>>>>>>>>

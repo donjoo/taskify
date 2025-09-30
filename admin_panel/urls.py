@@ -24,4 +24,11 @@ urlpatterns = [
     path("admin/tasks/create/", views.admin_task_create, name="admin_task_create"),
 
     path("superadmin/user/<int:user_id>/", views.superadmin_user_detail, name="superadmin_user_detail"),
-    path("superadmin/task/<int:task_id>/", views.superadmin_task_detail, name="superadmin_task_detail"),]
+    path("superadmin/task/<int:task_id>/", views.superadmin_task_detail, name="superadmin_task_detail"),
+    
+    
+    path("admin/user/<int:user_id>/", views.admin_user_detail, name="admin_user_detail"),
+    path("admin/task/<int:task_id>/", views.admin_task_detail, name="admin_task_detail"),
+
+    
+    ]
