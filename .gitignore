@@ -32,8 +32,7 @@ var/
 *.pot
 *.pyc
 *.pyo
-*.sqlite3
-db.sqlite3
+# db.sqlite3  <-- keep database included for submission
 media/
 staticfiles/
 local_settings.py
