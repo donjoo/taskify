@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from accounts.forms import UserForm
 from tasks.forms import TaskForm
-
+from django.core.paginator import Paginator
 
 # admin authenticate
 def login_view(request):
@@ -87,19 +87,25 @@ def user_delete(request, pk):
 
 
 
+
 @login_required
 def admin_dashboard(request):
-    if not role_check(request.user, ['admin','superadmin']):
+    if not role_check(request.user, ['admin', 'superadmin']):
         return HttpResponseForbidden("Forbidden")
-    
-    managed_users = CustomUser.objects.filter(role = 'user', )
-    tasks = Task.objects.filter(assigned_to__in=managed_users)
-    
-    return render(request, 'admin_panel/admin_dashboard.html',{
-        'users': managed_users,
-        'tasks': tasks
-    })
 
+    # Get managed users and their tasks
+    managed_users = CustomUser.objects.filter(role='user')
+    tasks_list = Task.objects.filter(assigned_to__in=managed_users).order_by('-id')
+
+    # Pagination: 5 tasks per page
+    paginator = Paginator(tasks_list, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'admin_panel/admin_dashboard.html', {
+        'users': managed_users,
+        'page_obj': page_obj,  # pass page_obj to template
+    })
 
 
 
