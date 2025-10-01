@@ -98,7 +98,7 @@ python manage.py createsuperuser
 ```bash
             username : donjo 
             password : Don@1234
-            ```
+```
 
 6. **Run the development server**
 
