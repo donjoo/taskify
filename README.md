@@ -93,6 +93,13 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 
+  ##current db.sqlite3 SuperAdmin login info:
+  
+```bash
+            username : donjo 
+            password : Don@1234
+            ```
+
 6. **Run the development server**
 
 ```bash
